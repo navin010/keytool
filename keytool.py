@@ -1,8 +1,10 @@
 import os
 import csv
 from io import StringIO
+import pandas as pd
+
 #import subprocess
-from subprocess import Popen, PIPE
+#from subprocess import Popen, PIPE
 
 
 java_path= r'C:\Program Files\Java\jre1.8.0_181\bin'
@@ -38,10 +40,14 @@ print("------------------")
 #read string as file using buffer
 buff = StringIO(find_replace_input_ks_output)
 
-csv_reader = csv.reader(buff)   #read as csv
-for line in csv_reader:  # loop through lines
-    print(line[0])
-    print(line[3])
-    #cat1_value = line[0]  # left value
-    #cat2_value = line[1]  # right value
+#create pandas data frame
+df = pd.read_csv(buff)
+print(df.shape)
 
+#drop unneccessary columns
+df = df.drop(df.columns[[1, 2]], axis=1)
+print(df.shape)
+
+#convert to csv format
+chopped_columns = df.to_csv(index=False)
+print(chopped_columns)

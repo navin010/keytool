@@ -3,3 +3,11 @@ output_path=r'C:\Users\lubhayan\Documents\Clients\Internal\KeystoreConsolidation
 
 with open(output_path, "w") as text_file:
     text_file.write(find_replace_input_ks_output)
+
+
+csv_reader = csv.reader(buff)   #read as csv
+for line in csv_reader:  # loop through lines
+    print(line[0])
+    print(line[3])
+    #cat1_value = line[0]  # left value
+    #cat2_value = line[1]  # right value
