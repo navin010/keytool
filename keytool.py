@@ -18,7 +18,7 @@ ks2_location =r'C:\Users\lubhayan\Documents\Clients\Internal\KeystoreConsolidati
 ks2_pass = r'3point142'
 
 def cmd_command(ks_location, ks_pass):
-    list_ks = "keytool -list -keystore " + ks_location + " -storepass " + ks_pass
+    list_ks = "keytool -list -keystore " + '"' + ks_location + '"' + " -storepass " + ks_pass
     print(list_ks)
     return list_ks
 
@@ -109,7 +109,7 @@ def generate_certs(csv_data_set):
         print(line[0]) # left value
         #print(line[1]) # right value
 
-        export_cert_cmd = 'keytool -export -alias ' + line[0] + ' -file ' + ks1_location.rsplit("\\",1)[0] + "\\"  + line[0] + '.cer' +  ' -keystore ' +  ks1_location + ' -storepass ' + ks1_pass
+        export_cert_cmd = 'keytool -export -alias ' + '"'  + line[0] + '"' + ' -file ' + '"' + ks1_location.rsplit("\\",1)[0] + "\\"  + line[0] + '.cer' + '"' + ' -keystore ' + '"' + ks1_location + '"' + ' -storepass ' + ks1_pass
         print(export_cert_cmd)
 
         #generate cert one by one
