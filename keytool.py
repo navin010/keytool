@@ -36,13 +36,12 @@ def cmd_call_format(terminal_output):
     print("------------------")
 
     # remove first few unnecessary lines
-    terminal_output_string_remove_lines = terminal_output_string.split("\n", 5)[
-        5]  # split 5 times on \n and then take the 5th split value
+    terminal_output_string_remove_lines = terminal_output_string.split("\n", 5)[5]  # split 5 times on \n and then take the 5th split value
     print("------------------")
     print(terminal_output_string_remove_lines)
     print("------------------")
 
-    # remove unneccessary line feeds
+    # remove unnecessary line feeds
     terminal_output_string_remove_crlf = terminal_output_string_remove_lines.replace(', \n', ', ')
     print("------------------")
     print(terminal_output_string_remove_crlf)
@@ -75,7 +74,7 @@ def remove_columns(csv_file):
     #return chopped_columns
 
     #drop duplicate values on data set
-    #df = df.drop_duplicates('Fingerprint')
+    df = df.drop_duplicates('Fingerprint')
 
     print(df.to_csv(index=False))
     return df
@@ -111,5 +110,8 @@ def generate_certs(csv_data_set):
         #print(line[1])
         #cat1_value = line[0]  # left value
         #cat2_value = line[1]  # right value
+
+        export_certs_cmd = 'keytool -export -alias ' + line[0] + ' -file ' + ks1_location + "\\"  + line[0] + '.cer' +  ' -keystore ' +  ks1_location + ' -storepass ' + ks1_pass
+        print(export_certs_cmd)
 
 generate_certs(ds)
