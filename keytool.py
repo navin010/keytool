@@ -1,8 +1,8 @@
 import os
-import csv
 from io import StringIO
 import pandas as pd
 
+import csv
 #import subprocess
 #from subprocess import Popen, PIPE
 
@@ -11,34 +11,53 @@ java_path= r'C:\Program Files\Java\jre1.8.0_181\bin'
 os.chdir(java_path)
 
 
-input_ks_location =r'C:\Users\lubhayan\Documents\Clients\Internal\KeystoreConsolidation\NewGlobalKS\aws\agrewcappo055v.rbi.web.ds\el_puto.jks'
-input_ks_pass = r'3point142'
+ks1_location =r'C:\Users\lubhayan\Documents\Clients\Internal\KeystoreConsolidation\NewGlobalKS\aws\agrewcappo055v.rbi.web.ds\el_puto.jks'
+ks1_pass = r'3point142'
 
-list_input_ks = "keytool -list -keystore " + input_ks_location + " -storepass " + input_ks_pass
-print(list_input_ks)
+ks2_location =r'C:\Users\lubhayan\Documents\Clients\Internal\KeystoreConsolidation\NewGlobalKS\aws\agrewcappo055v.rbi.web.ds\2019.wildcard.adaptris.net.jks'
+ks2_pass = r'3point142'
 
-#list_input_ks_output = os.system(list_input_ks)
+def cmd_command(ks_location, ks_pass):
+    list_ks = "keytool -list -keystore " + ks_location + " -storepass " + ks_pass
+    print(list_ks)
+    return list_ks
 
-#read input from cmd
-list_input_ks_output = os.popen(list_input_ks).read()
-print("------------------")
-print(list_input_ks_output)
-print("------------------")
+ks1_list = cmd_command(ks1_location, ks1_pass)
+ks2_list = cmd_command(ks2_location, ks2_pass)
 
-#remove first few unnecessary lines
-split_list_input_ks_output = list_input_ks_output.split("\n",5)[5]   #split 5 times on \n and then take the 5th split value
-print("------------------")
-print(split_list_input_ks_output)
-print("------------------")
 
-#remove unneccessary line feeds
-find_replace_input_ks_output = split_list_input_ks_output.replace(', \n',', ')
-print("------------------")
-print(find_replace_input_ks_output)
-print("------------------")
+def cmd_call_format(terminal_output):
 
-#read string as file using buffer
-buff = StringIO(find_replace_input_ks_output)
+    # read input from cmd
+    terminal_output_string = os.popen(terminal_output).read()
+    # list_input_ks_output = os.system(list_input_ks)
+    print("------------------")
+    print(terminal_output_string)
+    print("------------------")
+
+    # remove first few unnecessary lines
+    terminal_output_string_remove_lines = terminal_output_string.split("\n", 5)[
+        5]  # split 5 times on \n and then take the 5th split value
+    print("------------------")
+    print(terminal_output_string_remove_lines)
+    print("------------------")
+
+    # remove unneccessary line feeds
+    terminal_output_string_remove_crlf = terminal_output_string_remove_lines.replace(', \n', ', ')
+    print("------------------")
+    print(terminal_output_string_remove_crlf)
+    print("------------------")
+
+    # read string as file using buffer
+    return StringIO(terminal_output_string_remove_crlf)
+
+
+buff1 = cmd_call_format(ks1_list)
+buff2 = cmd_call_format(ks2_list)
+
+
+
+'''
 
 #create pandas data frame
 df = pd.read_csv(buff)
@@ -51,3 +70,5 @@ print(df.shape)
 #convert to csv format
 chopped_columns = df.to_csv(index=False)
 print(chopped_columns)
+
+'''
