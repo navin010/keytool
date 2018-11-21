@@ -116,11 +116,16 @@ def generate_certs(csv_data_set):
         export_cert_cmd = 'keytool -export -alias ' + '"'  + line[0] + '"' + ' -file ' + '"' + ks1_location.rsplit("\\",1)[0] + "\\" + 'keytoolcerts' + "\\" + line[0] + '.cer' + '"' + ' -keystore ' + '"' + ks1_location + '"' + ' -storepass ' + ks1_pass
         print(export_cert_cmd)
 
-        #generate cert one by one
+        #export cert one by one
         os.system(export_cert_cmd)
 
+        #import certs one by one
+        import_cert_cmd = 'keytool -importcert -file ' + '"' + ks1_location.rsplit("\\",1)[0] + "\\" + 'keytoolcerts' + "\\" + line[0] + '.cer' + '"' + ' -keystore ' + '"' + ks2_location + '"' + ' -storepass ' + ks2_pass + ' -alias ' + '"' + line[0] + '"'
+        print(import_cert_cmd)
 
-
+        #import certs one by one
+        os.system(import_cert_cmd)
+        os.system("pause")  #pause to allow for user input
 
 generate_certs(ds)
 
