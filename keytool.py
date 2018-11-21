@@ -93,6 +93,21 @@ def merge_data_frames(df1, df2):
     df = df.drop(df.columns[[2, 3]], axis=1)
     print(df.to_csv(index=False))
 
+    #convert to string, then to file for csv use
+    df = df.to_csv(index=False)
+    df = StringIO(df)
+    return df
+
 
 ds = merge_data_frames(ds1,ds2)
 
+
+def generate_certs(csv_data_set):
+    csv_reader = csv.reader(csv_data_set)   #read as csv
+    for line in csv_reader:  # loop through lines
+        #print(line[0])
+        print(line[1])
+        #cat1_value = line[0]  # left value
+        #cat2_value = line[1]  # right value
+
+generate_certs(ds)
