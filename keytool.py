@@ -57,18 +57,23 @@ buff2 = cmd_call_format(ks2_list)
 
 
 
-'''
+def remove_columns(csv_file):
+    #create pandas data frame
+    df = pd.read_csv(csv_file)
+    print(df.shape)
 
-#create pandas data frame
-df = pd.read_csv(buff)
-print(df.shape)
+    #drop unneccessary columns
+    df = df.drop(df.columns[[1, 2]], axis=1)
+    print(df.shape)
 
-#drop unneccessary columns
-df = df.drop(df.columns[[1, 2]], axis=1)
-print(df.shape)
+    #convert to csv format
+    chopped_columns = df.to_csv(index=False)
+    print(chopped_columns)
 
-#convert to csv format
-chopped_columns = df.to_csv(index=False)
-print(chopped_columns)
+    return chopped_columns
 
-'''
+
+remove_columns(buff1)
+remove_columns(buff2)
+
+
