@@ -14,7 +14,7 @@ os.chdir(java_path)
 ks1_location =r'C:\Users\lubhayan\Documents\Clients\Internal\KeystoreConsolidation\NewGlobalKS\aws\agrewcappo055v.rbi.web.ds\el_puto.jks'
 ks1_pass = r'3point142'
 
-ks2_location =r'C:\Users\lubhayan\Documents\Clients\Internal\KeystoreConsolidation\NewGlobalKS\aws\agrewcappo055v.rbi.web.ds\2019.wildcard.adaptris.net.jks'
+ks2_location =r'C:\Users\lubhayan\Documents\Clients\Internal\KeystoreConsolidation\NewGlobalKS\aws\agrewcappo055v.rbi.web.ds\el_puto_2.jks'
 ks2_pass = r'3point142'
 
 def cmd_command(ks_location, ks_pass):
@@ -59,12 +59,15 @@ buff2 = cmd_call_format(ks2_list)
 
 def remove_columns(csv_file):
     #create pandas data frame
-    df = pd.read_csv(csv_file)
+    df = pd.read_csv(csv_file, index_col=False, header=None, sep=',', names=['Alias','Date','Type','Fingerprint']) #read in and add headers for csv file
     print(df.shape)
 
     #drop unneccessary columns
     df = df.drop(df.columns[[1, 2]], axis=1)
     print(df.shape)
+
+    #add column names
+    #df.columns = ['Alias','Fingerprint']
 
     #convert to csv format
     chopped_columns = df.to_csv(index=False)
