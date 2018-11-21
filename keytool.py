@@ -74,6 +74,9 @@ def remove_columns(csv_file):
     #print(chopped_columns)
     #return chopped_columns
 
+    #drop duplicate values on data set
+    #df = df.drop_duplicates('Fingerprint')
+
     print(df.to_csv(index=False))
     return df
 
@@ -83,9 +86,13 @@ ds2 = remove_columns(buff2)
 
 
 def merge_data_frames(df1, df2):
-    df = pd.merge(df1, df2, on=['Fingerprint'], how='left', indicator=True).query('_merge == "left_only"')
-    #df = df.drop_duplicates('Fingerprint')
+    df = pd.merge(df1, df2, on=['Fingerprint'], how='left', indicator=True).query('_merge == "left_only"')   #merge left, show indicator of both or left only and filter on left only
+    print(df.to_csv(index=False))
+
+    # drop unnecessary columns
+    df = df.drop(df.columns[[2, 3]], axis=1)
     print(df.to_csv(index=False))
 
 
-merge_data_frames(ds1,ds2)
+ds = merge_data_frames(ds1,ds2)
+
