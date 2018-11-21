@@ -102,6 +102,10 @@ ds = merge_data_frames(ds1,ds2)
 
 
 def generate_certs(csv_data_set):
+
+    #create dir for certs
+    os.system('mkdir ' + '"' + ks1_location.rsplit("\\",1)[0] + "\\" + 'keytoolcerts' + '"')
+
     csv_reader = csv.reader(csv_data_set)   #read as csv
     next(csv_reader)                        # ignore header line
 
@@ -109,7 +113,7 @@ def generate_certs(csv_data_set):
         print(line[0]) # left value
         #print(line[1]) # right value
 
-        export_cert_cmd = 'keytool -export -alias ' + '"'  + line[0] + '"' + ' -file ' + '"' + ks1_location.rsplit("\\",1)[0] + "\\"  + line[0] + '.cer' + '"' + ' -keystore ' + '"' + ks1_location + '"' + ' -storepass ' + ks1_pass
+        export_cert_cmd = 'keytool -export -alias ' + '"'  + line[0] + '"' + ' -file ' + '"' + ks1_location.rsplit("\\",1)[0] + "\\" + 'keytoolcerts' + "\\" + line[0] + '.cer' + '"' + ' -keystore ' + '"' + ks1_location + '"' + ' -storepass ' + ks1_pass
         print(export_cert_cmd)
 
         #generate cert one by one
@@ -117,7 +121,9 @@ def generate_certs(csv_data_set):
 
 
 
+
 generate_certs(ds)
+
 
 
 
