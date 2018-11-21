@@ -73,7 +73,5 @@ def remove_columns(csv_file):
     return chopped_columns
 
 
-remove_columns(buff1)
-remove_columns(buff2)
-
-
+ds1 = remove_columns(buff1)
+ds2 = remove_columns(buff2)
