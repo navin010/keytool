@@ -106,12 +106,18 @@ def generate_certs(csv_data_set):
     next(csv_reader)                        # ignore header line
 
     for line in csv_reader:  # loop through lines
-        print(line[0])
-        #print(line[1])
-        #cat1_value = line[0]  # left value
-        #cat2_value = line[1]  # right value
+        print(line[0]) # left value
+        #print(line[1]) # right value
 
-        export_certs_cmd = 'keytool -export -alias ' + line[0] + ' -file ' + ks1_location + "\\"  + line[0] + '.cer' +  ' -keystore ' +  ks1_location + ' -storepass ' + ks1_pass
-        print(export_certs_cmd)
+        export_cert_cmd = 'keytool -export -alias ' + line[0] + ' -file ' + ks1_location.rsplit("\\",1)[0] + "\\"  + line[0] + '.cer' +  ' -keystore ' +  ks1_location + ' -storepass ' + ks1_pass
+        print(export_cert_cmd)
+
+        #generate cert one by one
+        os.system(export_cert_cmd)
+
+
 
 generate_certs(ds)
+
+
+
