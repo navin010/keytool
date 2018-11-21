@@ -62,7 +62,7 @@ def remove_columns(csv_file):
     df = pd.read_csv(csv_file, index_col=False, header=None, sep=',', names=['Alias','Date','Type','Fingerprint']) #read in and add headers for csv file
     print(df.shape)
 
-    #drop unneccessary columns
+    #drop unnecessary columns
     df = df.drop(df.columns[[1, 2]], axis=1)
     print(df.shape)
 
@@ -70,11 +70,22 @@ def remove_columns(csv_file):
     #df.columns = ['Alias','Fingerprint']
 
     #convert to csv format
-    chopped_columns = df.to_csv(index=False)
-    print(chopped_columns)
+    #chopped_columns = df.to_csv(index=False)
+    #print(chopped_columns)
+    #return chopped_columns
 
-    return chopped_columns
+    print(df.to_csv(index=False))
+    return df
 
 
 ds1 = remove_columns(buff1)
 ds2 = remove_columns(buff2)
+
+
+def merge_data_frames(df1, df2):
+    df = pd.merge(df1, df2, on=['Fingerprint'], how='left', indicator=True).query('_merge == "left_only"')
+    #df = df.drop_duplicates('Fingerprint')
+    print(df.to_csv(index=False))
+
+
+merge_data_frames(ds1,ds2)
