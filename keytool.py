@@ -104,28 +104,34 @@ ds = merge_data_frames(ds1,ds2)
 def generate_certs(csv_data_set):
 
     #create dir for certs
-    os.system('mkdir ' + '"' + ks1_location.rsplit("\\",1)[0] + "\\" + 'keytoolcerts' + '"')
+    ks1_keytoolscerts = ks1_location.rsplit("\\",1)[0] + "\\" + 'keytoolcerts'
+
+    os.system('mkdir ' + '"' + ks1_keytoolscerts + '"')
 
     csv_reader = csv.reader(csv_data_set)   #read as csv
     next(csv_reader)                        # ignore header line
 
     for line in csv_reader:  # loop through lines
-        print(line[0]) # left value
+        alias = line[0]  # left csv value
+        print(alias)
         #print(line[1]) # right value
 
-        export_cert_cmd = 'keytool -export -alias ' + '"'  + line[0] + '"' + ' -file ' + '"' + ks1_location.rsplit("\\",1)[0] + "\\" + 'keytoolcerts' + "\\" + line[0] + '.cer' + '"' + ' -keystore ' + '"' + ks1_location + '"' + ' -storepass ' + ks1_pass
+        export_cert_cmd = 'keytool -export -alias ' + '"'  + alias + '"' + ' -file ' + '"' + ks1_keytoolscerts + "\\" + alias + '.cer' + '"' + ' -keystore ' + '"' + ks1_location + '"' + ' -storepass ' + ks1_pass
         print(export_cert_cmd)
 
         #export cert one by one
         os.system(export_cert_cmd)
 
         #import certs one by one
-        import_cert_cmd = 'keytool -importcert -file ' + '"' + ks1_location.rsplit("\\",1)[0] + "\\" + 'keytoolcerts' + "\\" + line[0] + '.cer' + '"' + ' -keystore ' + '"' + ks2_location + '"' + ' -storepass ' + ks2_pass + ' -alias ' + '"' + line[0] + '"'
+        import_cert_cmd = 'keytool -importcert -file ' + '"' + ks1_keytoolscerts + "\\" + alias + '.cer' + '"' + ' -keystore ' + '"' + ks2_location + '"' + ' -storepass ' + ks2_pass + ' -alias ' + '"' + alias + '"'
         print(import_cert_cmd)
 
         #import certs one by one
         os.system(import_cert_cmd)
         os.system("pause")  #pause to allow for user input
+
+    #remove directory and certs
+    os.system('rd /s /q ' + '"' + ks1_keytoolscerts + '"')          #remove dir and files(/s) quietly(/q)
 
 generate_certs(ds)
 
