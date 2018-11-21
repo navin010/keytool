@@ -104,9 +104,11 @@ ds = merge_data_frames(ds1,ds2)
 
 def generate_certs(csv_data_set):
     csv_reader = csv.reader(csv_data_set)   #read as csv
+    next(csv_reader)                        # ignore header line
+
     for line in csv_reader:  # loop through lines
-        #print(line[0])
-        print(line[1])
+        print(line[0])
+        #print(line[1])
         #cat1_value = line[0]  # left value
         #cat2_value = line[1]  # right value
 
