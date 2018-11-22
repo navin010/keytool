@@ -99,7 +99,7 @@ def generate_certs(csv_data_set):
 
         #Check if alias name does not exist in the new keystore
         print("-------Check Alias " + '"' + alias + '"' + " Does Not Exist in Right Keystore -----------")
-        alias_checked = check_alias_unique(alias, ds2_nd)
+        alias_checked = check_alias_unique(alias, ds2_nd)   #check using right/second non dropped data store
 
         # import certs one by one
         print("-------Import Certificate " + '"' + alias + '" as "' + alias_checked  + '"-----------')
