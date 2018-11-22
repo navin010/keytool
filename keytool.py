@@ -1,21 +1,17 @@
 import os
 from io import StringIO
 import pandas as pd
-
 import csv
-#import subprocess
-#from subprocess import Popen, PIPE
 
-
+# Paths
 java_path= r'C:\Program Files\Java\jre1.8.0_181\bin'
-os.chdir(java_path)
-
-
 ks1_location =r'C:\Users\lubhayan\Documents\Clients\Internal\KeystoreConsolidation\NewGlobalKS\aws\agrewcappo055v.rbi.web.ds\el_puto.jks'
 ks1_pass = r'3point142'
-
 ks2_location =r'C:\Users\lubhayan\Documents\Clients\Internal\KeystoreConsolidation\NewGlobalKS\aws\agrewcappo055v.rbi.web.ds\el_puto_2.jks'
 ks2_pass = r'3point142'
+
+
+os.chdir(java_path)
 
 def cmd_command(ks_location, ks_pass):
     list_ks = "keytool -list -keystore " + '"' + ks_location + '"' + " -storepass " + ks_pass
@@ -26,67 +22,52 @@ ks1_list = cmd_command(ks1_location, ks1_pass)
 ks2_list = cmd_command(ks2_location, ks2_pass)
 
 
-def cmd_call_format(terminal_output):
+def cmd_call_format(terminal_output, show_print):
 
     # read input from cmd
     terminal_output_string = os.popen(terminal_output).read()
-    # list_input_ks_output = os.system(list_input_ks)
-    print("--------op string----------")
-    print(terminal_output_string)
-    print("------------------")
 
     # remove first few unnecessary lines
     terminal_output_string_remove_lines = terminal_output_string.split("\n", 5)[5]  # split 5 times on \n and then take the 5th split value
-    print("--------op remove lines----------")
-    print(terminal_output_string_remove_lines)
-    print("------------------")
 
     # remove unnecessary line feeds
     terminal_output_string_remove_crlf = terminal_output_string_remove_lines.replace(', \n', ', ')
-    print("-------op remove crlf-----------")
-    print(terminal_output_string_remove_crlf)
-    print("------------------")
+
+    if show_print == True:
+        print("-------op formatted -----------")
+        print(terminal_output_string_remove_crlf)
+        print("------------------")
 
     # read string as file using buffer
     return StringIO(terminal_output_string_remove_crlf)
 
 
-buff1 = cmd_call_format(ks1_list)
-buff2 = cmd_call_format(ks2_list)
+buff1 = cmd_call_format(ks1_list, True)
+buff2 = cmd_call_format(ks2_list, True)
+buff2_nd = cmd_call_format(ks2_list, False)    #buff 2 for no dropped items, do not show print as it only for internal reference
 
-
-
-def remove_columns(csv_file):
+def remove_columns(csv_file, dropdup):
     #create pandas data frame
     df = pd.read_csv(csv_file, index_col=False, header=None, sep=',', names=['Alias','Date','Type','Fingerprint']) #read in and add headers for csv file
-    print(df.shape)
 
     #drop unnecessary columns
     df = df.drop(df.columns[[1, 2]], axis=1)
-    print(df.shape)
-
-    #add column names
-    #df.columns = ['Alias','Fingerprint']
-
-    #convert to csv format
-    #chopped_columns = df.to_csv(index=False)
-    #print(chopped_columns)
-    #return chopped_columns
 
     #drop duplicate values on data set
-    df = df.drop_duplicates('Fingerprint')
+    if dropdup == True:
+        df = df.drop_duplicates('Fingerprint')
+        print(df.to_csv(index=False))
 
-    print(df.to_csv(index=False))
     return df
 
 
-ds1 = remove_columns(buff1)
-ds2 = remove_columns(buff2)
+ds1 = remove_columns(buff1,True)
+ds2 = remove_columns(buff2, True)
+ds2_nd = remove_columns(buff2_nd, False)        #set dropping duplicates to False
 
 
 def merge_data_frames(df1, df2):
     df = pd.merge(df1, df2, on=['Fingerprint'], how='left', indicator=True).query('_merge == "left_only"')   #merge left, show indicator of both or left only and filter on left only
-    print(df.to_csv(index=False))
 
     # drop unnecessary columns
     df = df.drop(df.columns[[2, 3]], axis=1)
@@ -104,9 +85,6 @@ ds = merge_data_frames(ds1,ds2)
 def check_alias_unique(alias_name, data_set_right):
     print("***Alias Check = " + alias_name)
 
-    #exists = data_set_right.isin([alias_name], name='Alias')
-    #exists = data_set_right['Alias'].str.contains(alias_name)
-
     alias_ds = data_set_right.Alias
     print(alias_ds)
 
@@ -115,13 +93,13 @@ def check_alias_unique(alias_name, data_set_right):
 
     if exists == True :
         alias_name = alias_name + '9'
-        print("***Alias Appended = " + alias_name)
-        check_alias_unique(alias_name, ds2)
+        print("------Alias Appended------ = " + alias_name)
+        return check_alias_unique(alias_name, data_set_right)   # you have to use return when calling recursively
     else:
-        exit()
+        print("------Alias returned-------")
+        print(alias_name)
+        return alias_name
 
-
-check_alias_unique('nexus_testing_puto',ds2)
 
 
 def generate_certs(csv_data_set):
@@ -145,8 +123,14 @@ def generate_certs(csv_data_set):
         #export cert one by one
         os.system(export_cert_cmd)
 
+
+        #Check if alias name does not exist in the new keystore
+        alias_checked = check_alias_unique(alias, ds2_nd)
+        print("------Alias will be using------")
+        print(alias_checked)
+
         #import certs one by one
-        import_cert_cmd = 'keytool -importcert -file ' + '"' + ks1_keytoolscerts + "\\" + alias + '.cer' + '"' + ' -keystore ' + '"' + ks2_location + '"' + ' -storepass ' + ks2_pass + ' -alias ' + '"' + alias + '"'
+        import_cert_cmd = 'keytool -importcert -file ' + '"' + ks1_keytoolscerts + "\\" + alias + '.cer' + '"' + ' -keystore ' + '"' + ks2_location + '"' + ' -storepass ' + ks2_pass + ' -alias ' + '"' + str(alias_checked) + '"'
         print(import_cert_cmd)
 
         #import certs one by one
