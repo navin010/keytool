@@ -88,21 +88,21 @@ def generate_certs(csv_data_set):
     csv_reader = csv.reader(csv_data_set)   # read as csv
     next(csv_reader)                        # ignore header line
 
-    for line in csv_reader:  # loop through lines
+    for index, line in enumerate(csv_reader):  # loop through lines
         alias = line[0]  # left csv value
 
         # export cert one by one
-        print("-------Export Certificate " + '"' + alias + '"' + "-----------")
+        print('-------Export Certificate[' + str(index) + '] ' + '"' + alias + '"' + "-----------")
         export_cert_cmd = 'keytool -export -alias ' + '"'  + alias + '"' + ' -file ' + '"' + ks1_keytoolscerts + "\\" + alias + '.cer' + '"' + ' -keystore ' + '"' + ks1_location + '"' + ' -storepass ' + ks1_pass
         print(export_cert_cmd)
         os.system(export_cert_cmd)
 
         #Check if alias name does not exist in the new keystore
-        print("-------Check Alias " + '"' + alias + '"' + " Does Not Exist in Right Keystore -----------")
+        print("-------Check Alias[" + str(index) + '] ' + '"' + alias + '"' + " Does Not Exist in Right Keystore -----------")
         alias_checked = check_alias_unique(alias, ds2_nd)   #check using right/second non dropped data store
 
         # import certs one by one
-        print("-------Import Certificate " + '"' + alias + '" as "' + alias_checked  + '"-----------')
+        print('-------Export Certificate[' + str(index) + '] ' + '"' + alias + '" as "' + alias_checked  + '"-----------')
         import_cert_cmd = 'keytool -importcert -file ' + '"' + ks1_keytoolscerts + "\\" + alias + '.cer' + '"' + ' -keystore ' + '"' + ks2_location + '"' + ' -storepass ' + ks2_pass + ' -alias ' + '"' + str(alias_checked) + '"'
         print(import_cert_cmd)
         os.system(import_cert_cmd)
