@@ -31,19 +31,19 @@ def cmd_call_format(terminal_output):
     # read input from cmd
     terminal_output_string = os.popen(terminal_output).read()
     # list_input_ks_output = os.system(list_input_ks)
-    print("------------------")
+    print("--------op string----------")
     print(terminal_output_string)
     print("------------------")
 
     # remove first few unnecessary lines
     terminal_output_string_remove_lines = terminal_output_string.split("\n", 5)[5]  # split 5 times on \n and then take the 5th split value
-    print("------------------")
+    print("--------op remove lines----------")
     print(terminal_output_string_remove_lines)
     print("------------------")
 
     # remove unnecessary line feeds
     terminal_output_string_remove_crlf = terminal_output_string_remove_lines.replace(', \n', ', ')
-    print("------------------")
+    print("-------op remove crlf-----------")
     print(terminal_output_string_remove_crlf)
     print("------------------")
 
@@ -101,6 +101,29 @@ def merge_data_frames(df1, df2):
 ds = merge_data_frames(ds1,ds2)
 
 
+def check_alias_unique(alias_name, data_set_right):
+    print("***Alias Check = " + alias_name)
+
+    #exists = data_set_right.isin([alias_name], name='Alias')
+    #exists = data_set_right['Alias'].str.contains(alias_name)
+
+    alias_ds = data_set_right.Alias
+    print(alias_ds)
+
+    exists = any(data_set_right.Alias == alias_name)    #check if alias name exists in data set column named 'Alias'
+    print("Does alias exist -> " + str(exists))
+
+    if exists == True :
+        alias_name = alias_name + '9'
+        print("***Alias Appended = " + alias_name)
+        check_alias_unique(alias_name, ds2)
+    else:
+        exit()
+
+
+check_alias_unique('nexus_testing_puto',ds2)
+
+
 def generate_certs(csv_data_set):
 
     #create dir for certs
@@ -132,6 +155,7 @@ def generate_certs(csv_data_set):
 
     #remove directory and certs
     os.system('rd /s /q ' + '"' + ks1_keytoolscerts + '"')          #remove dir and files(/s) quietly(/q)
+
 
 generate_certs(ds)
 
