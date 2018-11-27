@@ -11,3 +11,11 @@ for line in csv_reader:  # loop through lines
     print(line[3])
     #cat1_value = line[0]  # left value
     #cat2_value = line[1]  # right value
+
+
+test = output_path.rsplit("\\",1)[0]
+print('op = ' + test)
+
+
+test = 'mkdir ' + '"' + ks1_location.rsplit("\\",1)[0] + "\\" + 'keytoolcerts' + '"'
+print('op = ' + test)

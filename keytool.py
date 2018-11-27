@@ -88,7 +88,7 @@ def generate_certs(csv_data_set):
     csv_reader = csv.reader(csv_data_set)   # read as csv
     next(csv_reader)                        # ignore header line
 
-    for index, line in enumerate(csv_reader):  # loop through lines
+    for index, line in enumerate(csv_reader):  # loop through lines, enumeration required for indexing
         alias = line[0]  # left csv value
 
         # export cert one by one
