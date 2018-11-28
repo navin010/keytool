@@ -102,7 +102,7 @@ def generate_certs(csv_data_set):
         alias_checked = check_alias_unique(alias, ds2_nd)   #check using right/second non dropped data store
 
         # import certs one by one
-        print('-------Export Certificate[' + str(index) + '] ' + '"' + alias + '" as "' + alias_checked  + '"-----------')
+        print('-------Import Certificate[' + str(index) + '] ' + '"' + alias + '" as "' + alias_checked  + '"-----------')
         import_cert_cmd = 'keytool -importcert -file ' + '"' + ks1_keytoolscerts + "\\" + alias + '.cer' + '"' + ' -keystore ' + '"' + ks2_location + '"' + ' -storepass ' + ks2_pass + ' -alias ' + '"' + str(alias_checked) + '"'
         print(import_cert_cmd)
         os.system(import_cert_cmd)
