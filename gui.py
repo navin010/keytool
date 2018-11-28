@@ -56,8 +56,9 @@ class Window(QtWidgets.QWidget):
 
 
     def openFileDialog(self):
-        filename = QtWidgets.QFileDialog.getOpenFileUrl(self)
-        self.l.setText(str(filename))
+        filename = QtWidgets.QFileDialog.getOpenFileNames(self, "Open a file")  # self, window name, directory start path (didn't work)
+        self.l.setText(str(filename[0])) #grab the first csv value, dont need the All files()* bit
+        print(str(filename[0]))
 
 
 app = QtWidgets.QApplication(sys.argv)
