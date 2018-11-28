@@ -35,9 +35,9 @@ class Window(QtWidgets.QWidget):
         self.init_ui()
 
     def init_ui(self):
-        self.b1 = QtWidgets.QPushButton('Open')
+        self.b1 = QtWidgets.QPushButton('Open left keystore')
         self.l1 = QtWidgets.QLabel('Select left keystore')
-        self.b2 = QtWidgets.QPushButton('Open')
+        self.b2 = QtWidgets.QPushButton('Open right keystore')
         self.l2 = QtWidgets.QLabel('Select right keystore')
 
 
@@ -51,15 +51,23 @@ class Window(QtWidgets.QWidget):
         self.setWindowTitle('KeyTool Manager')
 
         self.b1.clicked.connect(self.openFileDialog)   #signal = clicked, connecting it to btn_click
-        #self.b2.clicked.connect(self.openFileDialog, 'l2')  # signal = clicked, connecting it to btn_click
+        self.b2.clicked.connect(self.openFileDialog)   #signal = clicked, connecting it to btn_click
 
         self.show()
 
 
-    def openFileDialog(self, labelname):
-        filename = QtWidgets.QFileDialog.getOpenFileNames(self, "Open a file", "C://")  #self, window name, directory start path, .jks file extension filter e.g. "JKS File (*.jks)"
-        self.l1.setText(str(filename[0]))    #grab the first csv value, dont need the All files()* bit
-        print(str(filename[0]))
+    def openFileDialog(self):
+        sender = self.sender()
+
+        if sender.text() == 'Open left keystore':
+            filename = QtWidgets.QFileDialog.getOpenFileNames(self, "Open a file", "C://")  # self, window name, directory start path, .jks file extension filter e.g. "JKS File (*.jks)"
+            self.l1.setText(str(filename[0]))  # grab the first csv value, dont need the All files()* bit
+            print(str(filename[0]))
+
+        if sender.text() == 'Open right keystore':
+            filename = QtWidgets.QFileDialog.getOpenFileNames(self, "Open a file", "C://")  # self, window name, directory start path, .jks file extension filter e.g. "JKS File (*.jks)"
+            self.l2.setText(str(filename[0]))  # grab the first csv value, dont need the All files()* bit
+            print(str(filename[0]))
 
 
 app = QtWidgets.QApplication(sys.argv)
