@@ -37,29 +37,26 @@ class Window(QtWidgets.QWidget):
     def init_ui(self):
         self.b1 = QtWidgets.QPushButton('Open')
         self.l1 = QtWidgets.QLabel('Select left keystore')
-
         self.b2 = QtWidgets.QPushButton('Open')
         self.l2 = QtWidgets.QLabel('Select right keystore')
 
 
-        h_box = QtWidgets.QHBoxLayout()
-        h_box.addStretch()
-        h_box.addWidget(self.l1)
-        h_box.addStretch()
-
         v_box = QtWidgets.QVBoxLayout()
         v_box.addWidget(self.b1)
-        v_box.addLayout(h_box)
+        v_box.addWidget(self.l1)
+        v_box.addWidget(self.b2)
+        v_box.addWidget(self.l2)
 
         self.setLayout(v_box)
         self.setWindowTitle('KeyTool Manager')
 
         self.b1.clicked.connect(self.openFileDialog)   #signal = clicked, connecting it to btn_click
+        #self.b2.clicked.connect(self.openFileDialog, 'l2')  # signal = clicked, connecting it to btn_click
 
         self.show()
 
 
-    def openFileDialog(self):
+    def openFileDialog(self, labelname):
         filename = QtWidgets.QFileDialog.getOpenFileNames(self, "Open a file", "C://")  #self, window name, directory start path, .jks file extension filter e.g. "JKS File (*.jks)"
         self.l1.setText(str(filename[0]))    #grab the first csv value, dont need the All files()* bit
         print(str(filename[0]))
