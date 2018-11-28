@@ -35,6 +35,7 @@ class Window(QtWidgets.QWidget):
         self.init_ui()
 
     def init_ui(self):
+        #BUTTON DECLARATION
         #b1
         self.b1 = QtWidgets.QPushButton('Open left keystore')
         self.l1 = QtWidgets.QLabel()
@@ -46,6 +47,7 @@ class Window(QtWidgets.QWidget):
         #b3
         self.b3 = QtWidgets.QPushButton('Run')
 
+        #VBOX LAYOUT
         v_box = QtWidgets.QVBoxLayout()
         #b1
         v_box.addWidget(self.b1)
@@ -58,9 +60,10 @@ class Window(QtWidgets.QWidget):
         #b3
         v_box.addWidget(self.b3)
 
-        self.setLayout(v_box)
-        self.setWindowTitle('KeyTool Manager')
+        self.setLayout(v_box)                          #set layout to vbox
+        self.setWindowTitle('KeyTool Manager')         #set title
 
+        #SIGNALS & CONNECTIONS
         self.b1.clicked.connect(self.openFileDialog)   #signal = clicked, connecting it to btn_click
         self.b2.clicked.connect(self.openFileDialog)   #signal = clicked, connecting it to btn_click
         self.b3.clicked.connect(self.storeFileDialog)  # signal = clicked, connecting it to btn_click
@@ -69,19 +72,19 @@ class Window(QtWidgets.QWidget):
 
 
     def openFileDialog(self):
-        sender = self.sender()
+        sender = self.sender()          #find button sending
 
-        if sender.text() == 'Open left keystore':
-            filename = QtWidgets.QFileDialog.getOpenFileNames(self, "Open a file", "C://")  # self, window name, directory start path, .jks file extension filter e.g. "JKS File (*.jks)"
-            self.l1.setText(str(filename[0]))  # grab the first csv value, don't need the All files()* bit
-            global leftLocation
-            leftLocation = str(filename[0])
+        if sender.text() == 'Open left keystore':                                           #button name from sender
+            filename = QtWidgets.QFileDialog.getOpenFileNames(self, "Open a file", "C://")  #self, window name, directory start path, .jks file extension filter e.g. "JKS File (*.jks)"
+            self.l1.setText(str(filename[0]))                                               #grab the first csv value, don't need the All files()* bit
+            global leftLocation                                                             #declare global variable so can be used in other functions
+            leftLocation = str(filename[0])                                                 #store left filename into global var
 
-        if sender.text() == 'Open right keystore':
-            filename = QtWidgets.QFileDialog.getOpenFileNames(self, "Open a file", "C://")  # self, window name, directory start path, .jks file extension filter e.g. "JKS File (*.jks)"
-            self.l2.setText(str(filename[0]))  # grab the first csv value, dont need the All files()* bit
-            global rightLocation
-            rightLocation = str(filename[0])
+        if sender.text() == 'Open right keystore':                                          #button name from sender
+            filename = QtWidgets.QFileDialog.getOpenFileNames(self, "Open a file", "C://")  #self, window name, directory start path, .jks file extension filter e.g. "JKS File (*.jks)"
+            self.l2.setText(str(filename[0]))                                               #grab the first csv value, dont need the All files()* bit
+            global rightLocation                                                            #declare global variable so can be used in other functions
+            rightLocation = str(filename[0])                                                #store right filename into global var
 
     def storeFileDialog(self):
         print(leftLocation)
@@ -90,6 +93,6 @@ class Window(QtWidgets.QWidget):
         print(self.p2.text())
 
 
-app = QtWidgets.QApplication(sys.argv)
-a_window = Window()
+app = QtWidgets.QApplication(sys.argv)  #create application, required. pass in system variables
+a_window = Window()                     #call class create object
 sys.exit(app.exec())
