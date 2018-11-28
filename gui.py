@@ -72,20 +72,20 @@ class Window(QtWidgets.QWidget):
         print(ks1_pass)
         print(ks2_pass)
 
-
+        # get cmd list commands for each key store
         ks1_list = keytool.cmd_command(ks1_location, ks1_pass)
         ks2_list = keytool.cmd_command(ks2_location, ks2_pass)
-
+        # format lists and convert to csv files
         buff1 = keytool.cmd_call_format(ks1_list, True, 'Left')
         buff2 = keytool.cmd_call_format(ks2_list, True, 'Right')
-        buff2_nd = keytool.cmd_call_format(ks2_list, False, 'Right')                                #buff 2 for no dropped items, do not show print as it only for internal reference
-
+        buff2_nd = keytool.cmd_call_format(ks2_list, False, 'Right')                        #buff 2 for no dropped items, do not show print as it only for internal reference
+        # drop unnecessary columns and drop duplicates if required
         ds1 = keytool.remove_columns(buff1, True, 'Left')
         ds2 = keytool.remove_columns(buff2, True, 'Right')
-        ds2_nd = keytool.remove_columns(buff2_nd, False, 'Right')  # set dropping duplicates to False, will also not be printed
-
+        ds2_nd = keytool.remove_columns(buff2_nd, False, 'Right')                           #set dropping duplicates to False, will also not be printed
+        # merge data frames together and filter unique values
         ds = keytool.merge_data_frames(ds1, ds2)
-
+        # export and import the certificates, also do a unique alias check by looking against ds2_nd (non dropped duplicates)
         keytool.generate_certs(ds, ds2_nd, ks1_location, ks1_pass, ks2_location, ks2_pass)
 
 
