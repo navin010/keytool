@@ -1,31 +1,6 @@
 import sys
 from PyQt5 import QtWidgets
-
-'''
-def window():
-    app = QtWidgets.QApplication(sys.argv)            #passing in system arguments, arguments can be passed in to script via cmd, QApp required
-    w = QtWidgets.QWidget()
-    b = QtWidgets.QPushButton('Push Me')
-    l = QtWidgets.QLabel('Look at me')
-    #w.resize(300, 250)
-    #w.move(300, 300)
-
-    h_box = QtWidgets.QHBoxLayout()
-    h_box.addStretch()
-    h_box.addWidget(l)
-    h_box.addStretch()
-
-    v_box = QtWidgets.QVBoxLayout()
-    v_box.addWidget(b)
-    v_box.addLayout(h_box)
-
-    w.setWindowTitle('Key Tool Manager')
-    w.setLayout(v_box)
-    w.show()
-    sys.exit(app.exec_())
-
-window()
-'''
+import keytool
 
 class Window(QtWidgets.QWidget):
 
@@ -87,10 +62,32 @@ class Window(QtWidgets.QWidget):
             rightLocation = str(filename[0])                                                #store right filename into global var
 
     def storeFileDialog(self):
-        print(leftLocation)
-        print(self.p1.text())
-        print(rightLocation)
-        print(self.p2.text())
+        global ks1_location                               #define globally so functions can access variables
+        ks1_location = leftLocation.replace('[', '').replace(']','').replace("'",'')        #remove ['']
+        ks1_pass = self.p1.text()
+        ks2_location = rightLocation.replace('[', '').replace(']','').replace("'",'')       #remove []
+        ks2_pass = self.p2.text()
+        print(ks1_location)
+        print(ks2_location)
+        print(ks1_pass)
+        print(ks2_pass)
+
+
+        ks1_list = keytool.cmd_command(ks1_location, ks1_pass)
+        ks2_list = keytool.cmd_command(ks2_location, ks2_pass)
+
+        buff1 = keytool.cmd_call_format(ks1_list, True, 'Left')
+        buff2 = keytool.cmd_call_format(ks2_list, True, 'Right')
+        buff2_nd = keytool.cmd_call_format(ks2_list, False, 'Right')                                #buff 2 for no dropped items, do not show print as it only for internal reference
+
+        ds1 = keytool.remove_columns(buff1, True, 'Left')
+        ds2 = keytool.remove_columns(buff2, True, 'Right')
+        ds2_nd = keytool.remove_columns(buff2_nd, False, 'Right')  # set dropping duplicates to False, will also not be printed
+
+        ds = keytool.merge_data_frames(ds1, ds2)
+
+        keytool.generate_certs(ds, ds2_nd, ks1_location, ks1_pass, ks2_location, ks2_pass)
+
 
 
 app = QtWidgets.QApplication(sys.argv)  #create application, required. pass in system variables

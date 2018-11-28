@@ -19,3 +19,4 @@ print('op = ' + test)
 
 test = 'mkdir ' + '"' + ks1_location.rsplit("\\",1)[0] + "\\" + 'keytoolcerts' + '"'
 print('op = ' + test)
+
