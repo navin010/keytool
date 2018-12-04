@@ -3,11 +3,6 @@ from io import StringIO
 import pandas as pd
 import csv
 
-# Paths
-java_path= r'C:\Program Files\Java\jre1.8.0_181\bin'
-
-#Changed to JRE directory
-os.chdir(java_path)
 
 def cmd_command(ks_location, ks_pass):
     list_ks = "keytool -list -keystore " + '"' + ks_location + '"' + " -storepass " + ks_pass

@@ -1,16 +1,19 @@
 import sys
+import os
 from PyQt5 import QtWidgets
 import keytool
 
 class Window(QtWidgets.QWidget):
 
     def __init__(self):
-        super().__init__()          #constructor for QWidget
+        super().__init__()                                                                  #constructor for QWidget
 
         self.init_ui()
 
     def init_ui(self):
         #BUTTON DECLARATION
+        self.j1 = QtWidgets.QPushButton('Open JRE bin location')
+        self.j2 = QtWidgets.QLabel()
         #b1
         self.b1 = QtWidgets.QPushButton('Open left keystore')
         self.l1 = QtWidgets.QLabel()
@@ -24,53 +27,67 @@ class Window(QtWidgets.QWidget):
 
         #VBOX LAYOUT
         v_box = QtWidgets.QVBoxLayout()
+        #j1
+        v_box.addWidget(self.j1)
+        v_box.addWidget(self.j2)
         #b1
         v_box.addWidget(self.b1)
-        v_box.addWidget(self.p1)
         v_box.addWidget(self.l1)
+        v_box.addWidget(self.p1)
         #b2
         v_box.addWidget(self.b2)
-        v_box.addWidget(self.p2)
         v_box.addWidget(self.l2)
+        v_box.addWidget(self.p2)
         #b3
         v_box.addWidget(self.b3)
 
-        self.setLayout(v_box)                          #set layout to vbox
-        self.setWindowTitle('KeyTool Manager')         #set title
+        self.setLayout(v_box)                                                                   #set layout to vbox
+        self.setWindowTitle('KeyTool Manager')                                                  #set title
 
         #SIGNALS & CONNECTIONS
-        self.b1.clicked.connect(self.openFileDialog)   #signal = clicked, connecting it to btn_click
-        self.b2.clicked.connect(self.openFileDialog)   #signal = clicked, connecting it to btn_click
-        self.b3.clicked.connect(self.storeFileDialog)  # signal = clicked, connecting it to btn_click
+        self.j1.clicked.connect(self.openFileDir)                                               #signal = clicked, connecting it to openFileDir
+        self.b1.clicked.connect(self.openFileDialog)                                            #signal = clicked, connecting it to openFileDialog
+        self.b2.clicked.connect(self.openFileDialog)                                            #signal = clicked, connecting it to openFileDialog
+        self.b3.clicked.connect(self.storeFileDialog)                                           #signal = clicked, connecting it to storeFileDialog
 
         self.show()
 
 
+    def openFileDir(self):
+        self.jre = QtWidgets.QFileDialog.getExistingDirectory(self)
+        self.j2.setText(self.jre)
+        global java_path
+        java_path = self.jre
+
     def openFileDialog(self):
-        sender = self.sender()          #find button sending
+        sender = self.sender()                                                                      #find button sending
 
-        if sender.text() == 'Open left keystore':                                           #button name from sender
-            self.filename = QtWidgets.QFileDialog.getOpenFileNames(self, "Open a file", "C://")  #self, window name, directory start path, .jks file extension filter e.g. "JKS File (*.jks)"
-            self.l1.setText(str(self.filename[0]))                                               #grab the first csv value, don't need the All files()* bit
-            global leftLocation                                                             #declare global variable so can be used in other functions
-            leftLocation = str(self.filename[0])                                                 #store left filename into global var
+        if sender.text() == 'Open left keystore':                                                   #button name from sender
+            self.filename = QtWidgets.QFileDialog.getOpenFileNames(self, "Open a file", "C://")     #self, window name, directory start path, .jks file extension filter e.g. "JKS File (*.jks)"                             #
+            global leftLocation                                                                     #declare global variable so can be used in other functions
+            leftLocation = str(self.filename[0]).replace('[', '').replace(']','').replace("'",'')   #grab the first csv value, don't need the All files()* bit, store left filename into global var, remove ['']
+            self.l1.setText(leftLocation)
 
-        if sender.text() == 'Open right keystore':                                          #button name from sender
-            self.filename = QtWidgets.QFileDialog.getOpenFileNames(self, "Open a file", "C://")  #self, window name, directory start path, .jks file extension filter e.g. "JKS File (*.jks)"
-            self.l2.setText(str(self.filename[0]))                                               #grab the first csv value, dont need the All files()* bit
-            global rightLocation                                                            #declare global variable so can be used in other functions
-            rightLocation = str(self.filename[0])                                                #store right filename into global var
+        if sender.text() == 'Open right keystore':                                                  #button name from sender
+            self.filename = QtWidgets.QFileDialog.getOpenFileNames(self, "Open a file", "C://")     #self, window name, directory start path, .jks file extension filter e.g. "JKS File (*.jks)"                             #
+            global rightLocation                                                                    #declare global variable so can be used in other functions
+            rightLocation = str(self.filename[0]).replace('[', '').replace(']','').replace("'",'')  #grab the first csv value, dont need the All files()* bit, store right filename into global var, remove ['']
+            self.l2.setText(rightLocation)
 
     def storeFileDialog(self):
-        global ks1_location                               #define globally so functions can access variables
-        self.ks1_location = leftLocation.replace('[', '').replace(']','').replace("'",'')        #remove ['']
+        global ks1_location                                                                         #define globally so functions can access variables
+        self.ks1_location = leftLocation
         self.ks1_pass = self.p1.text()
-        self.ks2_location = rightLocation.replace('[', '').replace(']','').replace("'",'')       #remove ['']
+        self.ks2_location = rightLocation
         self.ks2_pass = self.p2.text()
         print(self.ks1_location)
         print(self.ks2_location)
         print(self.ks1_pass)
         print(self.ks2_pass)
+
+        # Changed to JRE directory
+        os.chdir(java_path)
+        print(java_path)
 
         # get cmd list commands for each key store
         self.ks1_list = keytool.cmd_command(self.ks1_location, self.ks1_pass)
@@ -78,11 +95,11 @@ class Window(QtWidgets.QWidget):
         # format lists and convert to csv files
         self.buff1 = keytool.cmd_call_format(self.ks1_list, True, 'Left')
         self.buff2 = keytool.cmd_call_format(self.ks2_list, True, 'Right')
-        self.buff2_nd = keytool.cmd_call_format(self.ks2_list, False, 'Right')                        #buff 2 for no dropped items, do not show print as it only for internal reference
+        self.buff2_nd = keytool.cmd_call_format(self.ks2_list, False, 'Right')                      #buff 2 for no dropped items, do not show print as it only for internal reference
         # drop unnecessary columns and drop duplicates if required
         self.ds1 = keytool.remove_columns(self.buff1, True, 'Left')
         self.ds2 = keytool.remove_columns(self.buff2, True, 'Right')
-        self.ds2_nd = keytool.remove_columns(self.buff2_nd, False, 'Right')                           #set dropping duplicates to False, will also not be printed
+        self.ds2_nd = keytool.remove_columns(self.buff2_nd, False, 'Right')                         #set dropping duplicates to False, will also not be printed
         # merge data frames together and filter unique values
         self.ds = keytool.merge_data_frames(self.ds1, self.ds2)
         # export and import the certificates, also do a unique alias check by looking against ds2_nd (non dropped duplicates)
@@ -90,6 +107,6 @@ class Window(QtWidgets.QWidget):
 
 
 
-app = QtWidgets.QApplication(sys.argv)  #create application, required. pass in system variables
-a_window = Window()                     #call class create object
+app = QtWidgets.QApplication(sys.argv)                                                              #create application, required. pass in system variables
+a_window = Window()                                                                                 #call class create object
 sys.exit(app.exec())
