@@ -50,6 +50,18 @@ class Window(QtWidgets.QWidget):
         self.setLayout(v_box)                                                                   #set layout to vbox
         self.setWindowTitle('KeyTool Manager')                                                  #set title
 
+        #Colours
+        self.j1.setStyleSheet("QWidget {background-color: black} QWidget {color: white}")
+        self.j2.setStyleSheet("QWidget {color: black}")
+        self.b1.setStyleSheet("QWidget {background-color: purple} QWidget {color: white}")
+        self.l1.setStyleSheet("QWidget {color: purple}")
+        self.p1.setStyleSheet("QWidget {color: purple}")
+        self.b2.setStyleSheet("QWidget {background-color: darkblue} QWidget {color: white}")
+        self.l2.setStyleSheet("QWidget {color: darkblue}")
+        self.p2.setStyleSheet("QWidget {color: darkblue}")
+        self.b3.setStyleSheet("QWidget {background-color: green} QWidget {color: white}")
+        self.l3.setStyleSheet("QWidget {color: red}")
+
         #SIGNALS & CONNECTIONS
         self.j1.clicked.connect(self.openFileDir)                                               #signal = clicked, connecting it to openFileDir
         self.b1.clicked.connect(self.openFileDialog)                                            #signal = clicked, connecting it to openFileDialog
@@ -83,8 +95,9 @@ class Window(QtWidgets.QWidget):
     def storeFileDialog(self):
         if self.l1.text() == '' or self.l2.text() == '' or  self.p1.text()=='' or self.p2.text()=='' or java_path=='':          #check if required values are there
             self.l3.setText('Please enter values for all fields')
-            self.l3.setStyleSheet("QWidget {color: red}")
         else:
+            self.l3.setText('')                                                                     #reset text back to blank
+
             global ks1_location                                                                     #define globally so functions can access variables
             self.ks1_location = leftLocation
             self.ks1_pass = self.p1.text()
@@ -102,16 +115,20 @@ class Window(QtWidgets.QWidget):
             # get cmd list commands for each key store
             self.ks1_list = keytool.cmd_command(self.ks1_location, self.ks1_pass)
             self.ks2_list = keytool.cmd_command(self.ks2_location, self.ks2_pass)
+
             # format lists and convert to csv files
             self.buff1 = keytool.cmd_call_format(self.ks1_list, True, 'Left')
             self.buff2 = keytool.cmd_call_format(self.ks2_list, True, 'Right')
             self.buff2_nd = keytool.cmd_call_format(self.ks2_list, False, 'Right')                      #buff 2 for no dropped items, do not show print as it only for internal reference
+
             # drop unnecessary columns and drop duplicates if required
             self.ds1 = keytool.remove_columns(self.buff1, True, 'Left')
             self.ds2 = keytool.remove_columns(self.buff2, True, 'Right')
             self.ds2_nd = keytool.remove_columns(self.buff2_nd, False, 'Right')                         #set dropping duplicates to False, will also not be printed
+
             # merge data frames together and filter unique values
             self.ds = keytool.merge_data_frames(self.ds1, self.ds2)
+
             # export and import the certificates, also do a unique alias check by looking against ds2_nd (non dropped duplicates)
             keytool.generate_certs(self.ds, self.ds2_nd, self.ks1_location, self.ks1_pass, self.ks2_location, self.ks2_pass)
 
