@@ -3,10 +3,10 @@ import os
 from PyQt5 import QtWidgets
 import keytool
 import logging
+import datetime as dt
 
 #Start log
 logging.basicConfig(filename='logfile.log',level=logging.DEBUG)
-logging.debug('hello')
 
 class Window(QtWidgets.QWidget):
 
@@ -98,6 +98,9 @@ class Window(QtWidgets.QWidget):
             self.l3.setText('Please enter values for all fields')
         else:
             self.l3.setText('')                                                                     #reset text back to blank
+            self.thread = "[Start]"
+            print(self.thread)
+            logging.debug(self.thread + str(dt.datetime.now()))
 
             global ks1_location                                                                     #define globally so functions can access variables
             self.ks1_location = leftLocation
@@ -114,8 +117,8 @@ class Window(QtWidgets.QWidget):
             print(java_path)
 
             # get cmd list commands for each key store
-            self.ks1_list = keytool.cmd_command(self.ks1_location, self.ks1_pass)
-            self.ks2_list = keytool.cmd_command(self.ks2_location, self.ks2_pass)
+            self.ks1_list = keytool.cmd_command(self.ks1_location, self.ks1_pass, 'Left')
+            self.ks2_list = keytool.cmd_command(self.ks2_location, self.ks2_pass, 'Right')
 
             # format lists and convert to csv files
             self.buff1 = keytool.cmd_call_format(self.ks1_list, True, 'Left')
@@ -133,6 +136,9 @@ class Window(QtWidgets.QWidget):
             # export and import the certificates, also do a unique alias check by looking against ds2_nd (non dropped duplicates)
             keytool.generate_certs(self.ds, self.ds2_nd, self.ks1_location, self.ks1_pass, self.ks2_location, self.ks2_pass)
 
+            self.thread = "[Complete]"
+            print(self.thread)
+            logging.debug(self.thread + str(dt.datetime.now()))
 
 
 app = QtWidgets.QApplication(sys.argv)                                                              #create application, required. pass in system variables
