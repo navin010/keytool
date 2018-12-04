@@ -84,9 +84,10 @@ def generate_certs(csv_data_set, ds2_nd, ks1_location, ks1_pass, ks2_location, k
         import_cert_cmd = 'keytool -importcert -file ' + '"' + ks1_keytoolscerts + "/" + alias + '.cer' + '"' + ' -keystore ' + '"' + ks2_location + '"' + ' -storepass ' + ks2_pass + ' -alias ' + '"' + str(alias_checked) + '"'
         print(import_cert_cmd)
         os.system(import_cert_cmd)
-        os.system("pause")  #pause to allow for user input
+        #os.system("pause")  #pause to allow for user input
 
     os.system('rd /s /q ' + '"' + ks1_keytoolscerts + '"')          #remove temp dir and files(/s) quietly(/q)
+    print("-------Complete-----------")
 
 
 

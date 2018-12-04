@@ -50,43 +50,43 @@ class Window(QtWidgets.QWidget):
         sender = self.sender()          #find button sending
 
         if sender.text() == 'Open left keystore':                                           #button name from sender
-            filename = QtWidgets.QFileDialog.getOpenFileNames(self, "Open a file", "C://")  #self, window name, directory start path, .jks file extension filter e.g. "JKS File (*.jks)"
-            self.l1.setText(str(filename[0]))                                               #grab the first csv value, don't need the All files()* bit
+            self.filename = QtWidgets.QFileDialog.getOpenFileNames(self, "Open a file", "C://")  #self, window name, directory start path, .jks file extension filter e.g. "JKS File (*.jks)"
+            self.l1.setText(str(self.filename[0]))                                               #grab the first csv value, don't need the All files()* bit
             global leftLocation                                                             #declare global variable so can be used in other functions
-            leftLocation = str(filename[0])                                                 #store left filename into global var
+            leftLocation = str(self.filename[0])                                                 #store left filename into global var
 
         if sender.text() == 'Open right keystore':                                          #button name from sender
-            filename = QtWidgets.QFileDialog.getOpenFileNames(self, "Open a file", "C://")  #self, window name, directory start path, .jks file extension filter e.g. "JKS File (*.jks)"
-            self.l2.setText(str(filename[0]))                                               #grab the first csv value, dont need the All files()* bit
+            self.filename = QtWidgets.QFileDialog.getOpenFileNames(self, "Open a file", "C://")  #self, window name, directory start path, .jks file extension filter e.g. "JKS File (*.jks)"
+            self.l2.setText(str(self.filename[0]))                                               #grab the first csv value, dont need the All files()* bit
             global rightLocation                                                            #declare global variable so can be used in other functions
-            rightLocation = str(filename[0])                                                #store right filename into global var
+            rightLocation = str(self.filename[0])                                                #store right filename into global var
 
     def storeFileDialog(self):
         global ks1_location                               #define globally so functions can access variables
-        ks1_location = leftLocation.replace('[', '').replace(']','').replace("'",'')        #remove ['']
-        ks1_pass = self.p1.text()
-        ks2_location = rightLocation.replace('[', '').replace(']','').replace("'",'')       #remove []
-        ks2_pass = self.p2.text()
-        print(ks1_location)
-        print(ks2_location)
-        print(ks1_pass)
-        print(ks2_pass)
+        self.ks1_location = leftLocation.replace('[', '').replace(']','').replace("'",'')        #remove ['']
+        self.ks1_pass = self.p1.text()
+        self.ks2_location = rightLocation.replace('[', '').replace(']','').replace("'",'')       #remove ['']
+        self.ks2_pass = self.p2.text()
+        print(self.ks1_location)
+        print(self.ks2_location)
+        print(self.ks1_pass)
+        print(self.ks2_pass)
 
         # get cmd list commands for each key store
-        ks1_list = keytool.cmd_command(ks1_location, ks1_pass)
-        ks2_list = keytool.cmd_command(ks2_location, ks2_pass)
+        self.ks1_list = keytool.cmd_command(self.ks1_location, self.ks1_pass)
+        self.ks2_list = keytool.cmd_command(self.ks2_location, self.ks2_pass)
         # format lists and convert to csv files
-        buff1 = keytool.cmd_call_format(ks1_list, True, 'Left')
-        buff2 = keytool.cmd_call_format(ks2_list, True, 'Right')
-        buff2_nd = keytool.cmd_call_format(ks2_list, False, 'Right')                        #buff 2 for no dropped items, do not show print as it only for internal reference
+        self.buff1 = keytool.cmd_call_format(self.ks1_list, True, 'Left')
+        self.buff2 = keytool.cmd_call_format(self.ks2_list, True, 'Right')
+        self.buff2_nd = keytool.cmd_call_format(self.ks2_list, False, 'Right')                        #buff 2 for no dropped items, do not show print as it only for internal reference
         # drop unnecessary columns and drop duplicates if required
-        ds1 = keytool.remove_columns(buff1, True, 'Left')
-        ds2 = keytool.remove_columns(buff2, True, 'Right')
-        ds2_nd = keytool.remove_columns(buff2_nd, False, 'Right')                           #set dropping duplicates to False, will also not be printed
+        self.ds1 = keytool.remove_columns(self.buff1, True, 'Left')
+        self.ds2 = keytool.remove_columns(self.buff2, True, 'Right')
+        self.ds2_nd = keytool.remove_columns(self.buff2_nd, False, 'Right')                           #set dropping duplicates to False, will also not be printed
         # merge data frames together and filter unique values
-        ds = keytool.merge_data_frames(ds1, ds2)
+        self.ds = keytool.merge_data_frames(self.ds1, self.ds2)
         # export and import the certificates, also do a unique alias check by looking against ds2_nd (non dropped duplicates)
-        keytool.generate_certs(ds, ds2_nd, ks1_location, ks1_pass, ks2_location, ks2_pass)
+        keytool.generate_certs(self.ds, self.ds2_nd, self.ks1_location, self.ks1_pass, self.ks2_location, self.ks2_pass)
 
 
 
