@@ -83,6 +83,7 @@ class Window(QtWidgets.QWidget):
     def storeFileDialog(self):
         if self.l1.text() == '' or self.l2.text() == '' or  self.p1.text()=='' or self.p2.text()=='' or java_path=='':          #check if required values are there
             self.l3.setText('Please enter values for all fields')
+            self.l3.setStyleSheet("QWidget {color: red}")
         else:
             global ks1_location                                                                     #define globally so functions can access variables
             self.ks1_location = leftLocation
