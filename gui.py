@@ -6,6 +6,7 @@ import logging
 
 #Start log
 logging.basicConfig(filename='logfile.log',level=logging.DEBUG)
+logging.debug('hello')
 
 class Window(QtWidgets.QWidget):
 
@@ -37,12 +38,12 @@ class Window(QtWidgets.QWidget):
         v_box.addWidget(self.j2)
         #b1
         v_box.addWidget(self.b1)
-        v_box.addWidget(self.l1)
         v_box.addWidget(self.p1)
+        v_box.addWidget(self.l1)
         #b2
         v_box.addWidget(self.b2)
-        v_box.addWidget(self.l2)
         v_box.addWidget(self.p2)
+        v_box.addWidget(self.l2)
         #b3
         v_box.addWidget(self.b3)
         v_box.addWidget(self.l3)
@@ -93,7 +94,7 @@ class Window(QtWidgets.QWidget):
             self.l2.setText(rightLocation)
 
     def storeFileDialog(self):
-        if self.l1.text() == '' or self.l2.text() == '' or  self.p1.text()=='' or self.p2.text()=='' or java_path=='':          #check if required values are there
+        if self.l1.text() == '' or self.l2.text() == '' or  self.p1.text()=='' or self.p2.text()=='' or self.j2.text()=='':          #check if required values are there
             self.l3.setText('Please enter values for all fields')
         else:
             self.l3.setText('')                                                                     #reset text back to blank

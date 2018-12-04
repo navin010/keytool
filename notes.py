@@ -49,3 +49,15 @@ def sendCommand(self):
         command = 'keytool -importcert -file "C:/Users/lubhayan/Documents/Clients/Internal/KeystoreConsolidation/NewGlobalKS/aws/agrewcappo055v.rbi.web.ds/keytoolcerts/nexus_testing_puto.cer" -keystore "C:/Users/lubhayan/Documents/Clients/Internal/KeystoreConsolidation/NewGlobalKS/aws/agrewcappo055v.rbi.web.ds/el_puto_2.jks" -storepass 3point142 -alias "nexus_testing_puto"'
         print(command)
         subprocess.call(command, shell=True)
+
+
+
+
+
+try:
+    self.buff1 = keytool.cmd_call_format(self.ks1_list, True, 'Left')
+    self.buff2 = keytool.cmd_call_format(self.ks2_list, True, 'Right')
+    self.buff2_nd = keytool.cmd_call_format(self.ks2_list, False,
+                                            'Right')  # buff 2 for no dropped items, do not show print as it only for internal reference
+except Exception as e:
+    self.l3.setText(e)

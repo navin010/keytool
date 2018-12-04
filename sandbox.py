@@ -10,3 +10,4 @@ if (leftLocation != ''):
     print('got a value')
 else:
     print('no value')
+
