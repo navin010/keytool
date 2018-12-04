@@ -2,6 +2,10 @@ import sys
 import os
 from PyQt5 import QtWidgets
 import keytool
+import logging
+
+#Start log
+logging.basicConfig(filename='logfile.log',level=logging.DEBUG)
 
 class Window(QtWidgets.QWidget):
 
@@ -24,6 +28,7 @@ class Window(QtWidgets.QWidget):
         self.p2 = QtWidgets.QLineEdit('password')
         #b3
         self.b3 = QtWidgets.QPushButton('Run')
+        self.l3 = QtWidgets.QLabel()
 
         #VBOX LAYOUT
         v_box = QtWidgets.QVBoxLayout()
@@ -40,6 +45,7 @@ class Window(QtWidgets.QWidget):
         v_box.addWidget(self.p2)
         #b3
         v_box.addWidget(self.b3)
+        v_box.addWidget(self.l3)
 
         self.setLayout(v_box)                                                                   #set layout to vbox
         self.setWindowTitle('KeyTool Manager')                                                  #set title
@@ -75,35 +81,38 @@ class Window(QtWidgets.QWidget):
             self.l2.setText(rightLocation)
 
     def storeFileDialog(self):
-        global ks1_location                                                                         #define globally so functions can access variables
-        self.ks1_location = leftLocation
-        self.ks1_pass = self.p1.text()
-        self.ks2_location = rightLocation
-        self.ks2_pass = self.p2.text()
-        print(self.ks1_location)
-        print(self.ks2_location)
-        print(self.ks1_pass)
-        print(self.ks2_pass)
+        if self.l1.text() == '' or self.l2.text() == '' or  self.p1.text()=='' or self.p2.text()=='' or java_path=='':          #check if required values are there
+            self.l3.setText('Please enter values for all fields')
+        else:
+            global ks1_location                                                                     #define globally so functions can access variables
+            self.ks1_location = leftLocation
+            self.ks1_pass = self.p1.text()
+            self.ks2_location = rightLocation
+            self.ks2_pass = self.p2.text()
+            print(self.ks1_location)
+            print(self.ks2_location)
+            print(self.ks1_pass)
+            print(self.ks2_pass)
 
-        # Changed to JRE directory
-        os.chdir(java_path)
-        print(java_path)
+            # Changed to JRE directory
+            os.chdir(java_path)
+            print(java_path)
 
-        # get cmd list commands for each key store
-        self.ks1_list = keytool.cmd_command(self.ks1_location, self.ks1_pass)
-        self.ks2_list = keytool.cmd_command(self.ks2_location, self.ks2_pass)
-        # format lists and convert to csv files
-        self.buff1 = keytool.cmd_call_format(self.ks1_list, True, 'Left')
-        self.buff2 = keytool.cmd_call_format(self.ks2_list, True, 'Right')
-        self.buff2_nd = keytool.cmd_call_format(self.ks2_list, False, 'Right')                      #buff 2 for no dropped items, do not show print as it only for internal reference
-        # drop unnecessary columns and drop duplicates if required
-        self.ds1 = keytool.remove_columns(self.buff1, True, 'Left')
-        self.ds2 = keytool.remove_columns(self.buff2, True, 'Right')
-        self.ds2_nd = keytool.remove_columns(self.buff2_nd, False, 'Right')                         #set dropping duplicates to False, will also not be printed
-        # merge data frames together and filter unique values
-        self.ds = keytool.merge_data_frames(self.ds1, self.ds2)
-        # export and import the certificates, also do a unique alias check by looking against ds2_nd (non dropped duplicates)
-        keytool.generate_certs(self.ds, self.ds2_nd, self.ks1_location, self.ks1_pass, self.ks2_location, self.ks2_pass)
+            # get cmd list commands for each key store
+            self.ks1_list = keytool.cmd_command(self.ks1_location, self.ks1_pass)
+            self.ks2_list = keytool.cmd_command(self.ks2_location, self.ks2_pass)
+            # format lists and convert to csv files
+            self.buff1 = keytool.cmd_call_format(self.ks1_list, True, 'Left')
+            self.buff2 = keytool.cmd_call_format(self.ks2_list, True, 'Right')
+            self.buff2_nd = keytool.cmd_call_format(self.ks2_list, False, 'Right')                      #buff 2 for no dropped items, do not show print as it only for internal reference
+            # drop unnecessary columns and drop duplicates if required
+            self.ds1 = keytool.remove_columns(self.buff1, True, 'Left')
+            self.ds2 = keytool.remove_columns(self.buff2, True, 'Right')
+            self.ds2_nd = keytool.remove_columns(self.buff2_nd, False, 'Right')                         #set dropping duplicates to False, will also not be printed
+            # merge data frames together and filter unique values
+            self.ds = keytool.merge_data_frames(self.ds1, self.ds2)
+            # export and import the certificates, also do a unique alias check by looking against ds2_nd (non dropped duplicates)
+            keytool.generate_certs(self.ds, self.ds2_nd, self.ks1_location, self.ks1_pass, self.ks2_location, self.ks2_pass)
 
 
 
