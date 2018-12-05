@@ -34,16 +34,16 @@ class Window(QtWidgets.QWidget):
         #VBOX LAYOUT
         v_box = QtWidgets.QVBoxLayout()
         #j1
-        v_box.addWidget(self.j1)
         v_box.addWidget(self.j2)
+        v_box.addWidget(self.j1)
         #b1
+        v_box.addWidget(self.l1)
         v_box.addWidget(self.b1)
         v_box.addWidget(self.p1)
-        v_box.addWidget(self.l1)
         #b2
+        v_box.addWidget(self.l2)
         v_box.addWidget(self.b2)
         v_box.addWidget(self.p2)
-        v_box.addWidget(self.l2)
         #b3
         v_box.addWidget(self.b3)
         v_box.addWidget(self.l3)
