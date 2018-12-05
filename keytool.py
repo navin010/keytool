@@ -108,6 +108,10 @@ def generate_certs(csv_data_set, ds2_nd, ks1_location, ks1_pass, ks2_location, k
         print(thread)
         print(import_cert_cmd)
         os.system(import_cert_cmd)
+
+        input_note = input("Enter Note: ")
+        thread = "[Note]"
+        logging.debug(thread + str(input_note))
         #os.system("pause")  #pause to allow for user input
 
     thread = "[Delete Directory]"
