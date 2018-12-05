@@ -61,3 +61,8 @@ try:
                                             'Right')  # buff 2 for no dropped items, do not show print as it only for internal reference
 except Exception as e:
     self.l3.setText(e)
+
+
+
+
+print("[System Arguments]" + str(sys.argv))
