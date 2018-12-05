@@ -49,7 +49,7 @@ class Window(QtWidgets.QWidget):
         v_box.addWidget(self.l3)
 
         self.setLayout(v_box)                                                                   #set layout to vbox
-        self.setWindowTitle('KeyTool Manager')                                                  #set title
+        self.setWindowTitle('Key Tool Manager')                                                  #set title
 
         #Colours
         self.j1.setStyleSheet("QWidget {background-color: black} QWidget {color: white}")
