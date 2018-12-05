@@ -54,15 +54,15 @@ class Window(QtWidgets.QWidget):
         self.setWindowIcon(self.icon)
 
         #Colours
-        self.j1.setStyleSheet("QWidget {background-color: black} QWidget {color: white}")
+        self.j1.setStyleSheet("QWidget {background-color: black; color: white}")
         self.j2.setStyleSheet("QWidget {color: black}")
-        self.b1.setStyleSheet("QWidget {background-color: purple} QWidget {color: white}")
+        self.b1.setStyleSheet("QWidget {background-color: purple; color: white}")
         self.l1.setStyleSheet("QWidget {color: purple}")
         self.p1.setStyleSheet("QWidget {color: purple}")
-        self.b2.setStyleSheet("QWidget {background-color: darkblue} QWidget {color: white}")
+        self.b2.setStyleSheet("QWidget {background-color: darkblue; color: white}")
         self.l2.setStyleSheet("QWidget {color: darkblue}")
         self.p2.setStyleSheet("QWidget {color: darkblue}")
-        self.b3.setStyleSheet("QWidget {background-color: green} QWidget {color: white}")
+        self.b3.setStyleSheet("QWidget {background-color: green; color: white}")
         self.l3.setStyleSheet("QWidget {color: red}")
 
         #SIGNALS & CONNECTIONS
