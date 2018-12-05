@@ -50,7 +50,7 @@ class Window(QtWidgets.QWidget):
 
         self.setLayout(v_box)                                                                   #set layout to vbox
         self.setWindowTitle('Key Tool Manager')                                                 #set title
-        self.icon = QtGui.QIcon('icon.ico')                                                     #add icon
+        self.icon = QtGui.QIcon('key.png')                                                     #add icon
         self.setWindowIcon(self.icon)
 
         #Colours
@@ -99,7 +99,6 @@ class Window(QtWidgets.QWidget):
         if self.l1.text() == '' or self.l2.text() == '' or  self.p1.text()=='' or self.p2.text()=='' or self.j2.text()=='':          #check if required values are there
             self.l3.setText('Please enter values for all fields')
         else:
-            self.l3.setText('')                                                                     #reset text back to blank
             self.thread = "[Start]"
             print(self.thread)
             logging.debug(self.thread + str(dt.datetime.now()))
@@ -168,6 +167,7 @@ class Window(QtWidgets.QWidget):
                             self.thread = "[Complete]"
                             print(self.thread)
                             logging.debug(self.thread + str(dt.datetime.now()))
+                            self.l3.setText('')                                                    #reset dialog box when done
 
 
 app = QtWidgets.QApplication(sys.argv)                                                              #create application, required. pass in system variables
