@@ -18,7 +18,6 @@ def cmd_call_format(terminal_output, show_print, ks_number):
     terminal_output_string_remove_crlf = terminal_output_string_remove_lines.replace(', \n', ', ')  # remove unnecessary line feeds
     if show_print == True:    # Print non internal references, buff2 is used as an internal references for the alias duplicate checks
         thread = "[Formatted Keystore " + ks_number + "]"
-        logging.addLevelName(logging.debug, 'W')
         logging.debug(thread + terminal_output_string_remove_crlf)
         print(thread)
         print(terminal_output_string_remove_crlf)

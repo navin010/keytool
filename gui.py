@@ -121,24 +121,51 @@ class Window(QtWidgets.QWidget):
             self.ks2_list = keytool.cmd_command(self.ks2_location, self.ks2_pass, 'Right')
 
             # format lists and convert to csv files
-            self.buff1 = keytool.cmd_call_format(self.ks1_list, True, 'Left')
-            self.buff2 = keytool.cmd_call_format(self.ks2_list, True, 'Right')
-            self.buff2_nd = keytool.cmd_call_format(self.ks2_list, False, 'Right')                      #buff 2 for no dropped items, do not show print as it only for internal reference
+            try:
+                self.buff1 = keytool.cmd_call_format(self.ks1_list, True, 'Left')
+                self.buff2 = keytool.cmd_call_format(self.ks2_list, True, 'Right')
+                self.buff2_nd = keytool.cmd_call_format(self.ks2_list, False, 'Right')                      #buff 2 for no dropped items, do not show print as it only for internal reference
+            except Exception as e:
+                self.thread = '[Exception CMD Format]' + str(e)
+                logging.debug(self.thread)
+                print(self.thread)
+                self.l3.setText(self.thread)
+            else:
 
-            # drop unnecessary columns and drop duplicates if required
-            self.ds1 = keytool.remove_columns(self.buff1, True, 'Left')
-            self.ds2 = keytool.remove_columns(self.buff2, True, 'Right')
-            self.ds2_nd = keytool.remove_columns(self.buff2_nd, False, 'Right')                         #set dropping duplicates to False, will also not be printed
+                # drop unnecessary columns and drop duplicates if required
+                try:
+                    self.ds1 = keytool.remove_columns(self.buff1, True, 'Left')
+                    self.ds2 = keytool.remove_columns(self.buff2, True, 'Right')
+                    self.ds2_nd = keytool.remove_columns(self.buff2_nd, False, 'Right')                         #set dropping duplicates to False, will also not be printed
+                except Exception as e:
+                    self.thread = '[Exception Pandas Format]' + str(e)
+                    logging.debug(self.thread)
+                    print(self.thread)
+                    self.l3.setText(self.thread)
+                else:
 
-            # merge data frames together and filter unique values
-            self.ds = keytool.merge_data_frames(self.ds1, self.ds2)
+                    # merge data frames together and filter unique values
+                    try:
+                        self.ds = keytool.merge_data_frames(self.ds1, self.ds2)
+                    except Exception as e:
+                        self.thread = '[Exception Pandas Merge]' + str(e)
+                        logging.debug(self.thread)
+                        print(self.thread)
+                        self.l3.setText(self.thread)
+                    else:
 
-            # export and import the certificates, also do a unique alias check by looking against ds2_nd (non dropped duplicates)
-            keytool.generate_certs(self.ds, self.ds2_nd, self.ks1_location, self.ks1_pass, self.ks2_location, self.ks2_pass)
-
-            self.thread = "[Complete]"
-            print(self.thread)
-            logging.debug(self.thread + str(dt.datetime.now()))
+                        try:
+                            # export and import the certificates, also do a unique alias check by looking against ds2_nd (non dropped duplicates)
+                            keytool.generate_certs(self.ds, self.ds2_nd, self.ks1_location, self.ks1_pass, self.ks2_location, self.ks2_pass)
+                        except Exception as e:
+                            self.thread = '[Exception Certificate Import Export]' + str(e)
+                            logging.debug(self.thread)
+                            print(self.thread)
+                            self.l3.setText(self.thread)
+                        else:
+                            self.thread = "[Complete]"
+                            print(self.thread)
+                            logging.debug(self.thread + str(dt.datetime.now()))
 
 
 app = QtWidgets.QApplication(sys.argv)                                                              #create application, required. pass in system variables
