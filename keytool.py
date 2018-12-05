@@ -52,14 +52,22 @@ def merge_data_frames(df1, df2):
 
 def check_alias_unique(alias_name, data_set_right):
     exists = any(data_set_right.Alias == alias_name)    #check if alias name exists in data set column named 'Alias'
-    print('Does alias ' + alias_name  + ' exist :' + str(exists))
+    thread = '[Does Alias ' + '"' + alias_name + '"' + ' Exist]'
+    logging.debug(thread + str(exists))
+    print(thread)
+    print(str(exists))
 
     if exists == True :
         alias_name = alias_name + '9'
-        print("Alias appended = " + alias_name)
+        thread = "[Alias appended]"
+        logging.debug(thread + alias_name)
+        print(thread)
+        print(alias_name)
         return check_alias_unique(alias_name, data_set_right)   # you have to use return when calling recursively
     else:
-        print("Alias returned")
+        thread = "[Alias returned]"
+        logging.debug(thread + alias_name)
+        print(thread)
         print(alias_name)
         return alias_name
 
@@ -80,7 +88,7 @@ def generate_certs(csv_data_set, ds2_nd, ks1_location, ks1_pass, ks2_location, k
         alias = line[0]  # left csv value
 
         # export cert one by one
-        thread = '[Export Certificate[' + str(index) + '] ' + '"' + alias + '"' + "]"
+        thread = '[Export Certificate(' + str(index) + ') ' + '"' + alias + '"' + "]"
         export_cert_cmd = 'keytool -export -alias ' + '"'  + alias + '"' + ' -file ' + '"' + ks1_keytoolscerts + "/" + alias + '.cer' + '"' + ' -keystore ' + '"' + ks1_location + '"' + ' -storepass ' + ks1_pass
         logging.debug(thread + export_cert_cmd)
         print(thread)
@@ -88,11 +96,14 @@ def generate_certs(csv_data_set, ds2_nd, ks1_location, ks1_pass, ks2_location, k
         os.system(export_cert_cmd)
 
         #Check if alias name does not exist in the new keystore
-        print("[Check Alias[" + str(index) + '] ' + '"' + alias + '"' + " Does Not Exist in Right Keystore]")
+        thread = "[Check Alias(" + str(index) + ") Not Exist in Right Keystore]"
+        logging.debug(thread + alias)
+        print(thread)
+        print(alias)
         alias_checked = check_alias_unique(alias, ds2_nd)   #check using right/second non dropped data store
 
         # import certs one by one
-        thread = '[Import Certificate[' + str(index) + '] ' + '"' + alias + '" as "' + alias_checked  + ']'
+        thread = '[Import Certificate(' + str(index) + ') ' + '"' + alias + '" as "' + alias_checked + '"'  + ']'
         import_cert_cmd = 'keytool -importcert -file ' + '"' + ks1_keytoolscerts + "/" + alias + '.cer' + '"' + ' -keystore ' + '"' + ks2_location + '"' + ' -storepass ' + ks2_pass + ' -alias ' + '"' + str(alias_checked) + '"'
         logging.debug(thread + import_cert_cmd)
         print(thread)
@@ -100,6 +111,10 @@ def generate_certs(csv_data_set, ds2_nd, ks1_location, ks1_pass, ks2_location, k
         os.system(import_cert_cmd)
         #os.system("pause")  #pause to allow for user input
 
+    thread = "[Delete Directory]"
+    logging.debug(thread + ks1_keytoolscerts)
+    print(thread)
+    print(ks1_keytoolscerts)
     os.system('rd /s /q ' + '"' + ks1_keytoolscerts + '"')          #remove temp dir and files(/s) quietly(/q)
 
 
