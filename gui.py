@@ -102,7 +102,8 @@ class Window(QtWidgets.QWidget):
         else:
             self.thread = "[Start]"
             print(self.thread)
-            logging.debug(self.thread + str(dt.datetime.now()))
+            self.input_title = input("Enter Title: ")
+            logging.debug(self.thread + str(self.input_title) + ' ' + str(dt.datetime.now()))
 
             global ks1_location                                                                     #define globally so functions can access variables
             self.ks1_location = leftLocation
