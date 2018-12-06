@@ -34,16 +34,16 @@ class Window(QtWidgets.QWidget):
         #VBOX LAYOUT
         v_box = QtWidgets.QVBoxLayout()
         #j1
-        v_box.addWidget(self.j2)
         v_box.addWidget(self.j1)
+        v_box.addWidget(self.j2)
         #b1
-        v_box.addWidget(self.l1)
         v_box.addWidget(self.b1)
         v_box.addWidget(self.p1)
+        v_box.addWidget(self.l1)
         #b2
-        v_box.addWidget(self.l2)
         v_box.addWidget(self.b2)
         v_box.addWidget(self.p2)
+        v_box.addWidget(self.l2)
         #b3
         v_box.addWidget(self.b3)
         v_box.addWidget(self.l3)
@@ -54,15 +54,15 @@ class Window(QtWidgets.QWidget):
         self.setWindowIcon(self.icon)
 
         #Colours
-        self.j1.setStyleSheet("QWidget {background-color: black; color: white}")
+        self.j1.setStyleSheet("QWidget {background-color: black; color: white; border-style: solid; border-color: black; border-width: 5px; border-radius: 10px;}")
         self.j2.setStyleSheet("QWidget {color: black}")
-        self.b1.setStyleSheet("QWidget {background-color: purple; color: white}")
-        self.l1.setStyleSheet("QWidget {color: purple}")
-        self.p1.setStyleSheet("QWidget {color: purple}")
-        self.b2.setStyleSheet("QWidget {background-color: darkblue; color: white}")
+        self.b1.setStyleSheet("QWidget {background-color: purple; color: white; border-style: solid; border-color: purple; border-width: 5px; border-radius: 10px;}")
+        self.l1.setStyleSheet("QWidget {color: purple; }")
+        self.p1.setStyleSheet("QWidget {color: black; font-size: 7.75pt; border-style: solid; border-color: purple; border-width: 1.5px; border-radius: 10px;}")
+        self.b2.setStyleSheet("QWidget {background-color: darkblue; color: white; border-style: solid; border-color: darkblue; border-width: 5px; border-radius: 10px;}")
         self.l2.setStyleSheet("QWidget {color: darkblue}")
-        self.p2.setStyleSheet("QWidget {color: darkblue}")
-        self.b3.setStyleSheet("QWidget {background-color: green; color: white}")
+        self.p2.setStyleSheet("QWidget {color: black; font-size: 7.75pt; border-style: solid; border-color: darkblue; border-width: 1.5px; border-radius: 10px;}")
+        self.b3.setStyleSheet("QWidget {background-color: green; color: white; border-style: solid; border-color: green; border-width: 7px; border-radius: 10px;}")
         self.l3.setStyleSheet("QWidget {color: red}")
 
         #SIGNALS & CONNECTIONS
