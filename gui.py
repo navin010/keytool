@@ -52,6 +52,7 @@ class Window(QtWidgets.QWidget):
         self.setWindowTitle('Key Tool Manager')                                                 #set title
         self.icon = QtGui.QIcon('key.png')                                                     #add icon
         self.setWindowIcon(self.icon)
+        #self.setStyleSheet("background-color: lightGray;")
 
         #Colours
         self.j1.setStyleSheet("QWidget {background-color: black; color: white; border-style: solid; border-color: black; border-width: 5px; border-radius: 10px;}")
