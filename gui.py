@@ -3,6 +3,7 @@ import os
 from PyQt5 import QtWidgets, QtGui
 import keytool
 import logging
+from io import StringIO
 import datetime as dt
 
 #Start log
@@ -28,7 +29,9 @@ class Window(QtWidgets.QWidget):
         self.l2 = QtWidgets.QLabel()
         self.p2 = QtWidgets.QLineEdit('password')
         #b3
-        self.b3 = QtWidgets.QPushButton('Run')
+        self.b3 = QtWidgets.QPushButton('Compare')
+        self.l4 = QtWidgets.QLabel()
+        self.b4 = QtWidgets.QPushButton('Transfer')
         self.l3 = QtWidgets.QLabel()
 
         #VBOX LAYOUT
@@ -46,6 +49,8 @@ class Window(QtWidgets.QWidget):
         v_box.addWidget(self.l2)
         #b3
         v_box.addWidget(self.b3)
+        v_box.addWidget(self.l4)
+        v_box.addWidget(self.b4)
         v_box.addWidget(self.l3)
 
         self.setLayout(v_box)                                                                   #set layout to vbox
@@ -64,6 +69,7 @@ class Window(QtWidgets.QWidget):
         self.l2.setStyleSheet("QWidget {color: darkblue}")
         self.p2.setStyleSheet("QWidget {color: black; font-size: 7.75pt; border-style: solid; border-color: darkblue; border-width: 1.5px; border-radius: 10px;}")
         self.b3.setStyleSheet("QWidget {background-color: green; color: white; border-style: solid; border-color: green; border-width: 7px; border-radius: 10px;}")
+        self.b4.setStyleSheet("QWidget {background-color: green; color: white; border-style: solid; border-color: green; border-width: 7px; border-radius: 10px;}")
         self.l3.setStyleSheet("QWidget {color: red}")
 
         #SIGNALS & CONNECTIONS
@@ -71,6 +77,7 @@ class Window(QtWidgets.QWidget):
         self.b1.clicked.connect(self.openFileDialog)                                            #signal = clicked, connecting it to openFileDialog
         self.b2.clicked.connect(self.openFileDialog)                                            #signal = clicked, connecting it to openFileDialog
         self.b3.clicked.connect(self.storeFileDialog)                                           #signal = clicked, connecting it to storeFileDialog
+        self.b4.clicked.connect(self.transferCerts)                                             #signal = clicked, connecting it to transferCerts
 
         self.show()
 
@@ -149,27 +156,33 @@ class Window(QtWidgets.QWidget):
 
                     # merge data frames together and filter unique values
                     try:
-                        self.ds = keytool.merge_data_frames(self.ds1, self.ds2)
+                        self.ds_string = keytool.merge_data_frames(self.ds1, self.ds2)
+                        self.ds = StringIO(self.ds_string)
                     except Exception as e:
                         self.thread = '[Exception Pandas Merge]' + str(e)
                         logging.debug(self.thread)
                         print(self.thread)
                         self.l3.setText(self.thread)
                     else:
+                        #print(self.ds.read())
+                        self.l4.setText(self.ds_string)
 
-                        try:
-                            # export and import the certificates, also do a unique alias check by looking against ds2_nd (non dropped duplicates)
-                            keytool.generate_certs(self.ds, self.ds2_nd, self.ks1_location, self.ks1_pass, self.ks2_location, self.ks2_pass)
-                        except Exception as e:
-                            self.thread = '[Exception Certificate Import Export]' + str(e)
-                            logging.debug(self.thread)
-                            print(self.thread)
-                            self.l3.setText(self.thread)
-                        else:
-                            self.thread = "[Complete]"
-                            print(self.thread)
-                            logging.debug(self.thread + str(dt.datetime.now()))
-                            self.l3.setText('')                                                    #reset dialog box when done
+    def transferCerts(self):
+        try:
+            # export and import the certificates, also do a unique alias check by looking against ds2_nd (non dropped duplicates)
+            keytool.generate_certs(self.ds, self.ds2_nd, self.ks1_location, self.ks1_pass, self.ks2_location,
+                                   self.ks2_pass)
+        except Exception as e:
+            self.thread = '[Exception Certificate Import Export]' + str(e)
+            logging.debug(self.thread)
+            print(self.thread)
+            self.l3.setText(self.thread)
+        else:
+            self.thread = "[Complete]"
+            print(self.thread)
+            logging.debug(self.thread + str(dt.datetime.now()))
+            self.l3.setText('')  # reset dialog box when done
+
 
 
 app = QtWidgets.QApplication(sys.argv)                                                              #create application, required. pass in system variables

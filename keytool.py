@@ -39,13 +39,14 @@ def remove_columns(csv_file, dropdup, ks_number):
 
 def merge_data_frames(df1, df2):
     df = pd.merge(df1, df2, on=['Fingerprint'], how='left', indicator=True).query('_merge == "left_only"')   #merge left, show indicator of both or left only and filter on left only
-    df = df.drop(df.columns[[2, 3]], axis=1)  # drop unnecessary columns
-    df = df.to_csv(index=False)  # convert to string, then to file for csv use
+    df = df.drop(df.columns[[2, 3]], axis=1)    # drop unnecessary columns
+    df.columns = ['Alias', 'Fingerprint']       # rename columns, rename alias_x to Alias, have to add Fingerprint as well
+    df = df.to_csv(index=False)                 # convert to string, then to file for csv use
     thread = "[Pandas Merged]"
     logging.debug(thread + df)
     print(thread)
     print(df)
-    df = StringIO(df)           # convert from string to file for csv use
+    #df = StringIO(df)                           # convert from string to file for csv use
     return df
 
 
