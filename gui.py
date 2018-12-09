@@ -34,20 +34,27 @@ class Window(QtWidgets.QWidget):
         self.b4 = QtWidgets.QPushButton('Transfer')
         self.l3 = QtWidgets.QLabel()
 
-        #VBOX LAYOUT
+        #Left Right box join
+        v_box_left = QtWidgets.QVBoxLayout()
+        v_box_left.addWidget(self.b1)
+        v_box_left.addWidget(self.p1)
+        v_box_left.addWidget(self.l1)
+        v_box_right = QtWidgets.QVBoxLayout()
+        v_box_right.addWidget(self.b2)
+        v_box_right.addWidget(self.p2)
+        v_box_right.addWidget(self.l2)
+        h_box_lr = QtWidgets.QHBoxLayout()
+        h_box_lr.addLayout(v_box_left)
+        h_box_lr.addLayout(v_box_right)
+
+        #LAYOUT
         v_box = QtWidgets.QVBoxLayout()
-        #j1
+        #Left Right Boxes
+        v_box.addLayout(h_box_lr)
+        # j1
         v_box.addWidget(self.j1)
         v_box.addWidget(self.j2)
-        #b1
-        v_box.addWidget(self.b1)
-        v_box.addWidget(self.p1)
-        v_box.addWidget(self.l1)
-        #b2
-        v_box.addWidget(self.b2)
-        v_box.addWidget(self.p2)
-        v_box.addWidget(self.l2)
-        #b3
+        #b3/4
         v_box.addWidget(self.b3)
         v_box.addWidget(self.l4)
         v_box.addWidget(self.b4)
@@ -69,7 +76,7 @@ class Window(QtWidgets.QWidget):
         self.l2.setStyleSheet("QWidget {color: darkblue}")
         self.p2.setStyleSheet("QWidget {color: black; font-size: 7.75pt; border-style: solid; border-color: darkblue; border-width: 1.5px; border-radius: 10px;}")
         self.b3.setStyleSheet("QWidget {background-color: green; color: white; border-style: solid; border-color: green; border-width: 7px; border-radius: 10px;}")
-        self.b4.setStyleSheet("QWidget {background-color: green; color: white; border-style: solid; border-color: green; border-width: 7px; border-radius: 10px;}")
+        self.b4.setStyleSheet("QWidget {background-color: darkred; color: white; border-style: solid; border-color: darkred; border-width: 7px; border-radius: 10px;}")
         self.l3.setStyleSheet("QWidget {color: red}")
 
         #SIGNALS & CONNECTIONS
