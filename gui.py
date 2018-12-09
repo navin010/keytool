@@ -109,8 +109,7 @@ class Window(QtWidgets.QWidget):
         else:
             self.thread = "[Start]"
             print(self.thread)
-            self.input_title = input("Enter Title: ")
-            logging.debug(self.thread + str(self.input_title) + ' ' + str(dt.datetime.now()))
+            logging.debug(self.thread + str(dt.datetime.now()))
 
             global ks1_location                                                                     #define globally so functions can access variables
             self.ks1_location = leftLocation
@@ -164,14 +163,13 @@ class Window(QtWidgets.QWidget):
                         print(self.thread)
                         self.l3.setText(self.thread)
                     else:
-                        #print(self.ds.read())
+                        self.l3.setText('')  # reset dialog box when done
                         self.l4.setText(self.ds_string)
 
     def transferCerts(self):
         try:
             # export and import the certificates, also do a unique alias check by looking against ds2_nd (non dropped duplicates)
-            keytool.generate_certs(self.ds, self.ds2_nd, self.ks1_location, self.ks1_pass, self.ks2_location,
-                                   self.ks2_pass)
+            keytool.generate_certs(self.ds, self.ds2_nd, self.ks1_location, self.ks1_pass, self.ks2_location, self.ks2_pass)
         except Exception as e:
             self.thread = '[Exception Certificate Import Export]' + str(e)
             logging.debug(self.thread)
@@ -182,7 +180,7 @@ class Window(QtWidgets.QWidget):
             print(self.thread)
             logging.debug(self.thread + str(dt.datetime.now()))
             self.l3.setText('')  # reset dialog box when done
-
+            self.l4.setText('')
 
 
 app = QtWidgets.QApplication(sys.argv)                                                              #create application, required. pass in system variables
