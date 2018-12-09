@@ -86,6 +86,8 @@ class Window(QtWidgets.QWidget):
         self.b3.clicked.connect(self.storeFileDialog)                                           #signal = clicked, connecting it to storeFileDialog
         self.b4.clicked.connect(self.transferCerts)                                             #signal = clicked, connecting it to transferCerts
 
+        self.mergeFlag = False
+
         self.show()
 
 
@@ -172,23 +174,28 @@ class Window(QtWidgets.QWidget):
                     else:
                         self.l3.setText('')  # reset dialog box when done
                         self.l4.setText(self.ds_string)
+                        self.mergeFlag = True
 
     def transferCerts(self):
-        try:
-            # export and import the certificates, also do a unique alias check by looking against ds2_nd (non dropped duplicates)
-            keytool.generate_certs(self.ds, self.ds2_nd, self.ks1_location, self.ks1_pass, self.ks2_location, self.ks2_pass)
-        except Exception as e:
-            self.thread = '[Exception Certificate Import Export]' + str(e)
-            logging.debug(self.thread)
-            print(self.thread)
-            self.l3.setText(self.thread)
-        else:
-            self.thread = "[Complete]"
-            print(self.thread)
-            logging.debug(self.thread + str(dt.datetime.now()))
-            self.l3.setText('')  # reset dialog box when done
-            self.l4.setText('')
 
+        if self.mergeFlag == False:
+            self.l3.setText('Please enter values for all fields and generate comparison')
+        else:
+            try:
+                # export and import the certificates, also do a unique alias check by looking against ds2_nd (non dropped duplicates)
+                keytool.generate_certs(self.ds, self.ds2_nd, self.ks1_location, self.ks1_pass, self.ks2_location, self.ks2_pass)
+            except Exception as e:
+                self.thread = '[Exception Certificate Import Export]' + str(e)
+                logging.debug(self.thread)
+                print(self.thread)
+                self.l3.setText(self.thread)
+            else:
+                self.thread = "[Complete]"
+                print(self.thread)
+                logging.debug(self.thread + str(dt.datetime.now()))
+                self.l3.setText('')     # reset dialog box when done
+                self.l4.setText('')     # remove comparison data after transfer run (redundant anyway, only gets stored for one run)
+                self.mergeFlag = False  # reset flag to false as ds from comparison disappears after one run
 
 app = QtWidgets.QApplication(sys.argv)                                                              #create application, required. pass in system variables
 a_window = Window()                                                                                 #call class create object
